@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import WeatherRecord from '../models/WeatherRecord.js';
+import { Op } from 'sequelize'; // ✅ required for case-insensitive search
 
 const router = express.Router();
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
@@ -57,7 +58,7 @@ router.get('/search', async (req, res) => {
     const records = await WeatherRecord.findAll({
       where: {
         location: {
-          [WeatherRecord.sequelize.Op.iLike]: `%${location}%`
+          [Op.iLike]: `%${location}%` // 🔍 case-insensitive search
         }
       }
     });
@@ -82,16 +83,16 @@ router.put('/update/:id', async (req, res) => {
   }
 
   try {
-    const updated = await WeatherRecord.update(
+    const [rowsUpdated, [updatedRecord]] = await WeatherRecord.update(
       { date_from: from, date_to: to },
       { where: { id: req.params.id }, returning: true }
     );
 
-    if (!updated[0]) {
+    if (!rowsUpdated) {
       return res.status(404).json({ error: 'Record not found' });
     }
 
-    res.json({ message: 'Weather record updated', updated: updated[1][0] });
+    res.json({ message: 'Weather record updated', updated: updatedRecord });
   } catch (err) {
     console.error('Update error:', err.message);
     res.status(500).json({ error: 'Update failed' });
