@@ -1,23 +1,24 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from '../db/sequelize.js';
 
-const WeatherRecordSchema = new mongoose.Schema({
+const WeatherRecord = sequelize.define('WeatherRecord', {
   location: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  dateRange: {
-    from: { type: Date, required: true },
-    to: { type: Date, required: true }
+  date_from: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
   },
-  weatherData: {
-    type: Object,
-    required: true
+  date_to: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  weather_data: {
+    type: DataTypes.JSONB
   }
+}, {
+  timestamps: true
 });
 
-const WeatherRecord = mongoose.model('WeatherRecord', WeatherRecordSchema);
 export default WeatherRecord;
