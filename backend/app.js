@@ -8,6 +8,9 @@ import youtubeRoutes from './routes/youtube.js';
 import exportRoutes from './routes/export.js';
 import sequelize from './db/sequelize.js';
 import WeatherRecord from './models/WeatherRecord.js';
+import forecastRoutes from './routes/forecast.js';
+
+
 
 // Sync DB
 sequelize.sync().then(() => {
@@ -33,6 +36,7 @@ app.get('/', (req, res) => {
 app.use('/api/weather', weatherRoutes);
 app.use('/api/youtube', youtubeRoutes);
 app.use('/api/export', exportRoutes);
+app.use('/api/forecast', forecastRoutes);
 
 // Connect to MongoDB and start server
 mongoose
