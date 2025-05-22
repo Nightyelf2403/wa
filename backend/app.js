@@ -18,6 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
+app.get('/', (req, res) => {
+  res.send('Weather backend is running!');
+});
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
