@@ -1,0 +1,16 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f3f3f3;
+}
+
+form, ul {
+  margin-top: 20px;
+}
+
+li {
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
