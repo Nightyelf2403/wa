@@ -20,6 +20,180 @@
   <h2>Saved Records</h2>
   <ul id="savedList"></ul>
 
+  
+
   <script src="script.js"></script>
 </body>
 </html>
+
+<!-- Add this inside your index.html below the search section -->
+
+<section id="forecastSection" style="display:none; margin-top: 2rem;">
+  <h2>Hourly Forecast (Next 12 Hours)</h2>
+  <div id="hourlyForecast" class="forecast-grid"></div>
+
+  <h2>5-Day Forecast</h2>
+  <div id="dailyForecast" class="forecast-grid"></div>
+
+  <h2>Travel Videos</h2>
+  <div id="youtubeVideos" class="video-grid"></div>
+
+  <h2>City Map</h2>
+  <iframe id="cityMap" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+  <h2>Export Data</h2>
+  <div class="export-buttons">
+    <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/csv', '_blank')">📄 Export CSV</button>
+    <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/json', '_blank')">🧾 Export JSON</button>
+    <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/xml', '_blank')">📦 Export XML</button>
+    <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/pdf', '_blank')">📑 Export PDF</button>
+    <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/markdown', '_blank')">📝 Export MD</button>
+  </div>
+</section>
+
+<h2 style="margin-top: 2rem;">Top Cities</h2>
+<div class="top-cities">
+  <button onclick="fetchForecast('New York')">New York</button>
+  <button onclick="fetchForecast('London')">London</button>
+  <button onclick="fetchForecast('Tokyo')">Tokyo</button>
+  <button onclick="fetchForecast('Paris')">Paris</button>
+  <button onclick="fetchForecast('Mumbai')">Mumbai</button>
+</div>
+
+<div class="toggle-container">
+  <label class="switch">
+    <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
+    <span class="slider"></span>
+  </label>
+  <span>Dark Mode</span>
+</div>
+
+<style>
+  body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  body.dark-mode .forecast-card {
+    background: #1e1e1e;
+    color: #f1f1f1;
+  }
+  body.dark-mode .video-grid iframe {
+    border: 2px solid #444;
+  }
+  .forecast-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+  }
+  .forecast-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    min-width: 150px;
+    text-align: center;
+  }
+  .video-grid iframe {
+    width: 300px;
+    height: 180px;
+    margin: 10px;
+  }
+  .export-buttons button, .top-cities button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .toggle-container {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+  }
+  .switch input { display: none; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 34px;
+    top: 0; left: 0; right: 0; bottom: 0;
+    transition: .4s;
+  }
+  .slider:before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+  }
+  input:checked + .slider {
+    background-color: #2196f3;
+  }
+  input:checked + .slider:before {
+    transform: translateX(16px);
+  }
+</style>
+
+<script>
+  async function fetchForecast(city) {
+    const res = await fetch(`https://wa-c1rh.onrender.com/api/forecast?city=${encodeURIComponent(city)}`);
+    const data = await res.json();
+
+    if (data.error) {
+      alert("Forecast Error: " + data.error);
+      return;
+    }
+
+    document.getElementById('forecastSection').style.display = 'block';
+
+    const hourly = document.getElementById('hourlyForecast');
+    hourly.innerHTML = '';
+    data.hourly.forEach(hour => {
+      const card = document.createElement('div');
+      card.className = 'forecast-card';
+      const time = new Date(hour.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      card.innerHTML = `<strong>${time}</strong><br>${hour.temp}°C<br>${hour.weather[0].main}`;
+      hourly.appendChild(card);
+    });
+
+    const daily = document.getElementById('dailyForecast');
+    daily.innerHTML = '';
+    data.daily.forEach(day => {
+      const card = document.createElement('div');
+      card.className = 'forecast-card';
+      const date = new Date(day.dt * 1000).toDateString();
+      card.innerHTML = `<strong>${date}</strong><br>${day.temp.min}°C - ${day.temp.max}°C<br>${day.weather[0].main}`;
+      daily.appendChild(card);
+    });
+
+    const ytRes = await fetch(`https://wa-c1rh.onrender.com/api/youtube?city=${city}`);
+    const ytData = await ytRes.json();
+    const videos = document.getElementById('youtubeVideos');
+    videos.innerHTML = '';
+    (ytData.videos || []).forEach(video => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${video.videoId}`;
+      videos.appendChild(iframe);
+    });
+
+    document.getElementById('cityMap').src = `https://www.google.com/maps?q=${encodeURIComponent(city)}&output=embed`;
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+</script>
+
