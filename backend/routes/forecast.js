@@ -3,6 +3,8 @@ import axios from 'axios';
 
 const router = express.Router();
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
+console.log("🔑 API Key used:", OPENWEATHER_API_KEY);
+
 
 
 // 📌 GET /api/forecast?city=London
