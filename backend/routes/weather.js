@@ -4,7 +4,7 @@ import WeatherRecord from '../models/WeatherRecord.js';
 import { Op } from 'sequelize'; // ✅ required for case-insensitive search
 
 const router = express.Router();
-const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
+const OPENWEATHER_API_KEY ="36ffc6ea6c048bb0fcc1752338facd48";
 
 // 📌 POST /api/weather/create
 router.post('/create', async (req, res) => {
