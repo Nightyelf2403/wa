@@ -1,64 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Weather App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Weather App</h1>
+  <div class="container">
+    <h1>🌤️ Weather App</h1>
 
-  <form id="weatherForm">
-    <input type="text" id="location" placeholder="Enter city..." required />
-    <input type="date" id="fromDate" required />
-    <input type="date" id="toDate" required />
-    <button type="submit">Get & Save Weather</button>
-  </form>
+    <form id="weatherForm">
+      <input type="text" id="locationInput" placeholder="Enter city, zip, landmark, etc." />
+      <button type="submit">Search</button>
+      <button type="button" id="geoButton">Use My Location</button>
+    </form>
 
-  <section id="weatherResults"></section>
+    <div id="error" class="error"></div>
 
-  <h2>Saved Records</h2>
-  <ul id="savedList"></ul>
-
-  <section id="forecastSection" style="display:none; margin-top: 2rem;">
-    <h2>Hourly Forecast (Next 12 Hours)</h2>
-    <div id="hourlyForecast" class="forecast-grid"></div>
-
-    <h2>5-Day Forecast</h2>
-    <div id="dailyForecast" class="forecast-grid"></div>
-
-    <h2>Travel Videos</h2>
-    <div id="youtubeVideos" class="video-grid"></div>
-
-    <h2>City Map</h2>
-    <iframe id="cityMap" width="100%" height="300" style="border:0;" allowfullscreen loading="lazy"></iframe>
-
-    <h2>Export Data</h2>
-    <div class="export-buttons">
-      <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/csv', '_blank')">📄 Export CSV</button>
-      <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/json', '_blank')">🧾 Export JSON</button>
-      <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/xml', '_blank')">📦 Export XML</button>
-      <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/pdf', '_blank')">📑 Export PDF</button>
-      <button onclick="window.open('https://wa-c1rh.onrender.com/api/export/markdown', '_blank')">📝 Export MD</button>
-    </div>
-  </section>
-
-  <h2 style="margin-top: 2rem;">Top Cities</h2>
-  <div class="top-cities">
-    <button onclick="fetchForecast('New York')">New York</button>
-    <button onclick="fetchForecast('London')">London</button>
-    <button onclick="fetchForecast('Tokyo')">Tokyo</button>
-    <button onclick="fetchForecast('Paris')">Paris</button>
-    <button onclick="fetchForecast('Mumbai')">Mumbai</button>
-  </div>
-
-  <div class="toggle-container">
-    <label class="switch">
-      <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
-      <span class="slider"></span>
-    </label>
-    <span>Dark Mode</span>
+    <div id="weatherNow" class="weather-section"></div>
+    <div id="forecastSection" class="weather-section"></div>
   </div>
 
   <script src="script.js"></script>
