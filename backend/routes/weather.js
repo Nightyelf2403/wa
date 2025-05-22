@@ -10,7 +10,7 @@ router.post('/create', async (req, res) => {
   try {
     const { location, dateRange } = req.body;
 
-    if (!location || !dateRange || !dateRange.from || !dateRange.to) {
+    if (!location || !dateRange?.from || !dateRange?.to) {
       return res.status(400).json({ error: 'Location and date range are required' });
     }
 
@@ -20,22 +20,19 @@ router.post('/create', async (req, res) => {
 
     const weatherData = response.data;
 
-    const newRecord = new WeatherRecord({
+    const record = await WeatherRecord.create({
       location,
-      dateRange: {
-        from: new Date(dateRange.from),
-        to: new Date(dateRange.to)
-      },
-      weatherData
+      date_from: dateRange.from,
+      date_to: dateRange.to,
+      weather_data: weatherData
     });
 
-    await newRecord.save();
-    res.status(201).json({ message: 'Weather record saved', record: newRecord });
+    res.status(201).json({ message: 'Weather record saved', record });
   } catch (err) {
+    console.error(err.message);
     if (err.response?.status === 404) {
       res.status(404).json({ error: 'Location not found' });
     } else {
-      console.error(err.message);
       res.status(500).json({ error: 'Server error' });
     }
   }
@@ -44,31 +41,35 @@ router.post('/create', async (req, res) => {
 // 📌 GET /api/weather/all
 router.get('/all', async (req, res) => {
   try {
-    const records = await WeatherRecord.find().sort({ createdAt: -1 });
-    res.status(200).json(records);
+    const records = await WeatherRecord.findAll({ order: [['createdAt', 'DESC']] });
+    res.json(records);
   } catch (err) {
     console.error('Read error:', err.message);
-    res.status(500).json({ error: 'Failed to fetch weather records' });
+    res.status(500).json({ error: 'Failed to fetch records' });
   }
 });
 
-// 📌 GET /api/weather/search?location=Paris
+// 📌 GET /api/weather/search?location=City
 router.get('/search', async (req, res) => {
   const location = req.query.location;
 
   try {
-    const records = await WeatherRecord.find({
-      location: { $regex: location, $options: 'i' }
+    const records = await WeatherRecord.findAll({
+      where: {
+        location: {
+          [WeatherRecord.sequelize.Op.iLike]: `%${location}%`
+        }
+      }
     });
 
     if (records.length === 0) {
       return res.status(404).json({ message: 'No records found' });
     }
 
-    res.status(200).json(records);
+    res.json(records);
   } catch (err) {
     console.error('Search error:', err.message);
-    res.status(500).json({ error: 'Failed to search weather records' });
+    res.status(500).json({ error: 'Search failed' });
   }
 });
 
@@ -81,36 +82,35 @@ router.put('/update/:id', async (req, res) => {
   }
 
   try {
-    const updated = await WeatherRecord.findByIdAndUpdate(
-      req.params.id,
-      { $set: { 'dateRange.from': new Date(from), 'dateRange.to': new Date(to) } },
-      { new: true }
+    const updated = await WeatherRecord.update(
+      { date_from: from, date_to: to },
+      { where: { id: req.params.id }, returning: true }
     );
 
-    if (!updated) {
+    if (!updated[0]) {
       return res.status(404).json({ error: 'Record not found' });
     }
 
-    res.status(200).json({ message: 'Weather record updated', updated });
+    res.json({ message: 'Weather record updated', updated: updated[1][0] });
   } catch (err) {
     console.error('Update error:', err.message);
-    res.status(500).json({ error: 'Failed to update weather record' });
+    res.status(500).json({ error: 'Update failed' });
   }
 });
 
 // 📌 DELETE /api/weather/delete/:id
 router.delete('/delete/:id', async (req, res) => {
   try {
-    const deleted = await WeatherRecord.findByIdAndDelete(req.params.id);
+    const deleted = await WeatherRecord.destroy({ where: { id: req.params.id } });
 
     if (!deleted) {
       return res.status(404).json({ error: 'Record not found' });
     }
 
-    res.status(200).json({ message: 'Weather record deleted' });
+    res.json({ message: 'Weather record deleted' });
   } catch (err) {
     console.error('Delete error:', err.message);
-    res.status(500).json({ error: 'Failed to delete weather record' });
+    res.status(500).json({ error: 'Delete failed' });
   }
 });
 
