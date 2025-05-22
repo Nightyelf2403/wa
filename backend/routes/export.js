@@ -1,104 +1,31 @@
 import express from 'express';
+import { parse } from 'json2csv';
 import WeatherRecord from '../models/WeatherRecord.js';
-import { Parser } from 'json2csv';
-import PDFDocument from 'pdfkit';
 
 const router = express.Router();
 
-// === Export to JSON ===
-router.get('/json', async (req, res) => {
-  try {
-    const data = await WeatherRecord.find();
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(data, null, 2));
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to export JSON' });
-  }
-});
-
-// === Export to CSV (flattened for nested weatherData) ===
 router.get('/csv', async (req, res) => {
   try {
-    const data = await WeatherRecord.find().lean();
+    const records = await WeatherRecord.findAll();
 
-    // Flatten nested weatherData for CSV
-    const flattened = data.map(record => ({
+    // Format the CSV fields
+    const data = records.map(record => ({
+      id: record.id,
       location: record.location,
-      from: record.dateRange.from,
-      to: record.dateRange.to,
-      temp: record.weatherData?.main?.temp,
-      humidity: record.weatherData?.main?.humidity,
-      pressure: record.weatherData?.main?.pressure,
-      createdAt: record.createdAt
+      date_from: record.date_from,
+      date_to: record.date_to,
+      temperature: record.weather_data?.main?.temp || '',
+      description: record.weather_data?.weather?.[0]?.description || ''
     }));
 
-    const parser = new Parser();
-    const csv = parser.parse(flattened);
+    const csv = parse(data);
 
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename=weather.csv');
+    res.header('Content-Type', 'text/csv');
+    res.attachment('weather_data.csv');
     res.send(csv);
-  } catch (err) {
-    console.error('CSV Export Error:', err.message);
-    res.status(500).json({ error: 'Failed to export CSV' });
-  }
-});
-
-// === Export to PDF ===
-router.get('/pdf', async (req, res) => {
-  try {
-    const data = await WeatherRecord.find().lean();
-
-    const doc = new PDFDocument();
-    let filename = 'weather.pdf';
-    res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-    res.setHeader('Content-type', 'application/pdf');
-
-    doc.pipe(res);
-    doc.fontSize(16).text('Weather Records', { underline: true });
-
-    data.forEach((record, index) => {
-      doc
-        .moveDown()
-        .fontSize(12)
-        .text(`Record ${index + 1}`)
-        .text(`Location: ${record.location}`)
-        .text(`Date Range: ${record.dateRange.from} to ${record.dateRange.to}`)
-        .text(`Temp: ${record.weatherData?.main?.temp} °C`)
-        .text(`Humidity: ${record.weatherData?.main?.humidity} %`)
-        .text(`Pressure: ${record.weatherData?.main?.pressure} hPa`)
-        .text(`Created At: ${record.createdAt}`);
-    });
-
-    doc.end();
-  } catch (err) {
-    console.error('PDF Export Error:', err.message);
-    res.status(500).json({ error: 'Failed to export PDF' });
-  }
-});
-
-// === Export to Markdown ===
-router.get('/markdown', async (req, res) => {
-  try {
-    const data = await WeatherRecord.find().lean();
-    let markdown = '# Weather Records\n\n';
-
-    data.forEach((record, index) => {
-      markdown += `## Record ${index + 1}\n`;
-      markdown += `**Location:** ${record.location}\n\n`;
-      markdown += `**Date Range:** ${record.dateRange.from} to ${record.dateRange.to}\n\n`;
-      markdown += `**Temperature:** ${record.weatherData?.main?.temp} °C\n\n`;
-      markdown += `**Humidity:** ${record.weatherData?.main?.humidity} %\n\n`;
-      markdown += `**Pressure:** ${record.weatherData?.main?.pressure} hPa\n\n`;
-      markdown += `**Created At:** ${record.createdAt}\n\n---\n\n`;
-    });
-
-    res.setHeader('Content-Type', 'text/markdown');
-    res.setHeader('Content-Disposition', 'attachment; filename=weather.md');
-    res.send(markdown);
-  } catch (err) {
-    console.error('Markdown Export Error:', err.message);
-    res.status(500).json({ error: 'Failed to export Markdown' });
+  } catch (error) {
+    console.error('❌ CSV Export Error:', error);
+    res.status(500).json({ error: 'Failed to export CSV', details: error.message });
   }
 });
 
