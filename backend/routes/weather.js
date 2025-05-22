@@ -30,13 +30,14 @@ router.post('/create', async (req, res) => {
 
     res.status(201).json({ message: 'Weather record saved', record });
   } catch (err) {
-    console.error(err.message);
-    if (err.response?.status === 404) {
-      res.status(404).json({ error: 'Location not found' });
-    } else {
-      res.status(500).json({ error: 'Server error' });
-    }
+  console.error("❌ Weather Create Error:", err); // 🪵 Log full error
+  if (err.response && err.response.status === 404) {
+    res.status(404).json({ error: 'Location not found' });
+  } else {
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
+}
+
 });
 
 // 📌 GET /api/weather/all
