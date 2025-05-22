@@ -2,24 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weather App</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🌤️ Weather App</h1>
+  <h1>🌤️ Weather App</h1>
 
-    <form id="weatherForm">
-      <input type="text" id="locationInput" placeholder="Enter city, zip, landmark, etc." />
-      <button type="submit">Search</button>
-      <button type="button" id="geoButton">Use My Location</button>
-    </form>
+  <form>
+    <input type="text" id="cityInput" placeholder="Enter city or zip..." />
+    <button type="button" id="searchBtn">Search</button>
+    <button type="button" id="locationBtn">📍 Use My Location</button>
+  </form>
 
-    <div id="error" class="error"></div>
+  <div id="errorMessage" class="error"></div>
 
-    <div id="weatherNow" class="weather-section"></div>
-    <div id="forecastSection" class="weather-section"></div>
-  </div>
+  <section id="forecastSection" style="display: none;">
+    <h2>Hourly Forecast</h2>
+    <div id="hourlyForecast" class="forecast-grid"></div>
+
+    <h2>5-Day Forecast</h2>
+    <div id="dailyForecast" class="forecast-grid"></div>
+  </section>
 
   <script src="script.js"></script>
 </body>
