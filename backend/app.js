@@ -6,6 +6,14 @@ import cors from 'cors';
 import weatherRoutes from './routes/weather.js';
 import youtubeRoutes from './routes/youtube.js';
 import exportRoutes from './routes/export.js';
+import sequelize from './db/sequelize.js';
+import WeatherRecord from './models/WeatherRecord.js';
+
+// Sync DB
+sequelize.sync().then(() => {
+  console.log('PostgreSQL synced');
+});
+
 
 dotenv.config();
 
