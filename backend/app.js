@@ -11,6 +11,10 @@ import WeatherRecord from './models/WeatherRecord.js';
 import forecastRoutes from './routes/forecast.js';
 
 
+dotenv.config(); // ✅ This must be before using process.env
+
+
+
 
 // Sync DB
 sequelize.sync().then(() => {
