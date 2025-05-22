@@ -10,12 +10,10 @@ router.post('/create', async (req, res) => {
   try {
     const { location, dateRange } = req.body;
 
-    // Input validation
     if (!location || !dateRange || !dateRange.from || !dateRange.to) {
       return res.status(400).json({ error: 'Location and date range are required' });
     }
 
-    // Get current weather data from OpenWeatherMap
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${OPENWEATHER_API_KEY}&units=metric`
     );
@@ -34,7 +32,7 @@ router.post('/create', async (req, res) => {
     await newRecord.save();
     res.status(201).json({ message: 'Weather record saved', record: newRecord });
   } catch (err) {
-    if (err.response && err.response.status === 404) {
+    if (err.response?.status === 404) {
       res.status(404).json({ error: 'Location not found' });
     } else {
       console.error(err.message);
@@ -54,13 +52,13 @@ router.get('/all', async (req, res) => {
   }
 });
 
-// 📌 GET /api/weather/search?location=London
+// 📌 GET /api/weather/search?location=Paris
 router.get('/search', async (req, res) => {
   const location = req.query.location;
 
   try {
     const records = await WeatherRecord.find({
-      location: { $regex: location, $options: 'i' } // case-insensitive
+      location: { $regex: location, $options: 'i' }
     });
 
     if (records.length === 0) {
