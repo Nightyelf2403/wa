@@ -1,87 +1,79 @@
-const form = document.getElementById("weatherForm");
-const locationInput = document.getElementById("locationInput");
-const geoButton = document.getElementById("geoButton");
-const weatherNow = document.getElementById("weatherNow");
+const backendURL = "https://wa-c1rh.onrender.com/api";
+
+const cityInput = document.getElementById("cityInput");
+const searchBtn = document.getElementById("searchBtn");
+const locationBtn = document.getElementById("locationBtn");
 const forecastSection = document.getElementById("forecastSection");
-const errorDiv = document.getElementById("error");
+const hourlyDiv = document.getElementById("hourlyForecast");
+const dailyDiv = document.getElementById("dailyForecast");
+const errorDiv = document.getElementById("errorMessage");
 
-const backendURL = "https://wa-c1rh.onrender.com"; // your backend base URL
-
-// Fetch weather by text input
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const location = locationInput.value.trim();
-  if (!location) return;
-  fetchWeather(location);
+searchBtn.addEventListener("click", () => {
+  const city = cityInput.value.trim();
+  if (city) fetchForecast(city);
 });
 
-// Fetch weather by geolocation
-geoButton.addEventListener("click", () => {
+locationBtn.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      fetchWeather(`${latitude},${longitude}`);
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      try {
+        const geoURL = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+        const res = await fetch(geoURL);
+        const data = await res.json();
+        const city = data.city || data.locality || data.principalSubdivision;
+        if (city) {
+          cityInput.value = city;
+          fetchForecast(city);
+        } else {
+          errorDiv.innerText = "Unable to determine city from your location.";
+        }
+      } catch {
+        errorDiv.innerText = "Geolocation lookup failed.";
+      }
     },
     () => {
-      errorDiv.innerText = "Geolocation permission denied.";
+      errorDiv.innerText = "Location permission denied.";
     }
   );
 });
 
-async function fetchWeather(location) {
+async function fetchForecast(city) {
   errorDiv.innerText = "";
-  weatherNow.innerHTML = "";
-  forecastSection.innerHTML = "";
+  hourlyDiv.innerHTML = "";
+  dailyDiv.innerHTML = "";
 
   try {
-    const res = await fetch(`${backendURL}/api/forecast?city=${encodeURIComponent(location)}`);
+    const res = await fetch(`${backendURL}/forecast?city=${encodeURIComponent(city)}`);
     const data = await res.json();
 
-    if (data.error) {
+    if (!data.list || !Array.isArray(data.list)) {
       errorDiv.innerText = "City not found or forecast unavailable.";
       return;
     }
 
-    displayCurrentWeather(data.current, location);
-    displayForecast(data.daily);
-  } catch (err) {
+    forecastSection.style.display = "block";
+
+    // 6 hourly
+    const next6 = data.list.slice(0, 6);
+    next6.forEach(item => {
+      const time = new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const card = document.createElement("div");
+      card.className = "forecast-card";
+      card.innerHTML = `<strong>${time}</strong><br>${(item.main.temp - 273.15).toFixed(1)}°C<br>${item.weather[0].main}`;
+      hourlyDiv.appendChild(card);
+    });
+
+    // 5-day (every 8 steps)
+    for (let i = 0; i < data.list.length; i += 8) {
+      const item = data.list[i];
+      const date = new Date(item.dt * 1000).toDateString();
+      const card = document.createElement("div");
+      card.className = "forecast-card";
+      card.innerHTML = `<strong>${date}</strong><br>${(item.main.temp - 273.15).toFixed(1)}°C<br>${item.weather[0].main}`;
+      dailyDiv.appendChild(card);
+    }
+  } catch (e) {
     errorDiv.innerText = "Error fetching data.";
-    console.error(err);
   }
-}
-
-function displayCurrentWeather(current, city) {
-  const card = document.createElement("div");
-  card.className = "weather-card";
-  card.innerHTML = `
-    <h2>${city}</h2>
-    <h3>${current.weather[0].main} - ${current.weather[0].description}</h3>
-    <p>🌡️ Temp: ${current.temp}°C</p>
-    <p>💧 Humidity: ${current.humidity}%</p>
-    <p>💨 Wind: ${current.wind_speed} m/s</p>
-  `;
-  weatherNow.appendChild(card);
-}
-
-function displayForecast(daily) {
-  const heading = document.createElement("h3");
-  heading.innerText = "5-Day Forecast";
-  forecastSection.appendChild(heading);
-
-  const grid = document.createElement("div");
-  grid.className = "forecast-grid";
-
-  daily.slice(1, 6).forEach(day => {
-    const date = new Date(day.dt * 1000).toDateString();
-    const item = document.createElement("div");
-    item.className = "forecast-item";
-    item.innerHTML = `
-      <strong>${date}</strong>
-      <p>${day.weather[0].main}</p>
-      <p>${day.temp.min}°C - ${day.temp.max}°C</p>
-    `;
-    grid.appendChild(item);
-  });
-
-  forecastSection.appendChild(grid);
 }
