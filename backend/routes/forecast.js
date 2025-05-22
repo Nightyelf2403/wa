@@ -20,7 +20,7 @@ router.get('/forecast', async (req, res) => {
     const { lat, lon } = geoData[0];
 
     // STEP 2: Get forecast using One Call API
-    const forecastRes = await axios.get(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${OPENWEATHER_API_KEY}`);
+    const forecastRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${OPENWEATHER_API_KEY}`);
     const forecastData = forecastRes.data;
 
     res.json({
