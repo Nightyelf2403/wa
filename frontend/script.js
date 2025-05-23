@@ -9,6 +9,8 @@ const errorDiv = document.getElementById("error");
 const forecastDiv = document.getElementById("forecast");
 const hourlyDiv = document.getElementById("hourly");
 const dailyDiv = document.getElementById("daily");
+const youtubeDiv = document.getElementById("youtubeVideos");
+const mapFrame = document.getElementById("cityMap");
 
 searchBtn.addEventListener("click", () => {
   const city = cityInput.value.trim();
@@ -42,6 +44,8 @@ geoBtn.addEventListener("click", () => {
 function showError(msg) {
   errorDiv.innerText = msg;
   forecastDiv.classList.add("hidden");
+  youtubeDiv.innerHTML = "";
+  mapFrame.src = "";
 }
 
 async function fetchForecast(city) {
@@ -74,6 +78,23 @@ async function fetchForecast(city) {
       card.innerHTML = `<strong>${date}</strong><br>${day.temp.min}&deg;C - ${day.temp.max}&deg;C<br>${day.weather[0].main}`;
       dailyDiv.appendChild(card);
     });
+
+    // YouTube Videos
+    const ytRes = await fetch(`${backendBase}/youtube?city=${encodeURIComponent(city)}`);
+    const ytData = await ytRes.json();
+    youtubeDiv.innerHTML = "";
+    (ytData.videos || []).forEach(video => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${video.videoId}`;
+      iframe.width = "300";
+      iframe.height = "180";
+      iframe.style.margin = "10px";
+      iframe.allowFullscreen = true;
+      youtubeDiv.appendChild(iframe);
+    });
+
+    // Map
+    mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(city)}&output=embed`;
   } catch (err) {
     console.error("Fetch error:", err);
     showError("Error fetching weather data");
