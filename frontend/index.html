@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌤️ Weather App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>🌤️ Weather App</h1>
+    <h1>☀️ Weather App</h1>
     <div class="search-bar">
-      <input type="text" id="cityInput" placeholder="Enter city..." />
+      <input type="text" id="cityInput" placeholder="Enter city or landmark...">
       <button id="searchBtn">Search</button>
       <button id="geoBtn">📍 Use My Location</button>
     </div>
 
     <div id="errorMessage" class="error"></div>
 
-    <div id="forecastSection" class="forecast hidden">
+    <div id="forecastSection" class="hidden">
+      <h2>🌤️ Real-Time Weather</h2>
+      <div id="currentWeather" class="current-weather"></div>
+
       <h2>Hourly Forecast</h2>
       <div id="hourlyForecast" class="forecast-grid"></div>
 
@@ -28,15 +31,7 @@
       <div id="youtubeVideos" class="video-grid"></div>
 
       <h2>City Map</h2>
-      <iframe
-        id="cityMap"
-        width="100%"
-        height="300"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+      <iframe id="cityMap" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
 
