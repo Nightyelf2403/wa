@@ -1,4 +1,4 @@
-const backendBase = "https://app-jvpd.onrender.com/api";
+const backendBase = "https://wa-c1rh.onrender.com/api";
 
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
