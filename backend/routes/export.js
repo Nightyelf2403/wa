@@ -1,3 +1,4 @@
+// weather/routes/export.js
 import express from 'express';
 import { parse } from 'json2csv';
 import WeatherRecord from '../models/WeatherRecord.js';
@@ -8,7 +9,6 @@ router.get('/csv', async (req, res) => {
   try {
     const records = await WeatherRecord.findAll();
 
-    // Format the CSV fields
     const data = records.map(record => ({
       id: record.id,
       location: record.location,
@@ -19,7 +19,6 @@ router.get('/csv', async (req, res) => {
     }));
 
     const csv = parse(data);
-
     res.header('Content-Type', 'text/csv');
     res.attachment('weather_data.csv');
     res.send(csv);
@@ -30,3 +29,5 @@ router.get('/csv', async (req, res) => {
 });
 
 export default router;
+
+
