@@ -4,29 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weather App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>🌤️ Weather App</h1>
-
-  <form>
+  <div class="container">
+    <h1>Weather App</h1>
     <input id="locationInput" type="text" placeholder="Enter city..." />
     <button id="searchBtn">Search</button>
     <button id="useLocationBtn">📍 Use My Location</button>
     <div id="resultSection"></div>
-
-  </form>
-
-  <div id="errorMessage" class="error"></div>
-
-  <section id="forecastSection" style="display: none;">
-    <h2>Hourly Forecast</h2>
-    <div id="hourlyForecast" class="forecast-grid"></div>
-
-    <h2>5-Day Forecast</h2>
-    <div id="dailyForecast" class="forecast-grid"></div>
-  </section>
-
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
