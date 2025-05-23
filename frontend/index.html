@@ -18,7 +18,9 @@
   <div class="container">
     <h1>☀️ Weather App</h1>
     <div class="search-bar">
-      <input type="text" id="cityInput" placeholder="Enter city..." />
+      <input type="text" id="cityInput" list="citySuggestions" placeholder="Enter city..." />
+      <datalist id="citySuggestions"></datalist>
+
       <button id="searchBtn">Search</button>
       <button id="geoBtn">📍 Use My Location</button>
     </div>
