@@ -1,3 +1,4 @@
+const OPENWEATHER_API_KEY = "36ffc6ea6c048bb0fcc1752338facd48";
 const backendBase = "https://wa-c1rh.onrender.com/api";
 
 const cityInput = document.getElementById("cityInput");
@@ -11,7 +12,6 @@ const currentWeatherDiv = document.getElementById("currentWeather");
 const mapFrame = document.getElementById("cityMap");
 const youtubeSection = document.getElementById("youtubeVideos");
 
-// Toggle dark mode
 document.getElementById("darkModeToggle").addEventListener("change", () => {
   document.body.classList.toggle("dark-mode");
 });
@@ -27,7 +27,7 @@ geoBtn.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const { latitude, longitude } = pos.coords;
     try {
-      const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=36ffc6ea6c048bb0fcc1752338facd48`);
+      const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${OPENWEATHER_API_KEY}`);
       const [locData] = await res.json();
       if (!locData || !locData.name) throw new Error();
       cityInput.value = locData.name;
@@ -45,14 +45,34 @@ function showError(msg) {
 }
 
 async function fetchAll(city) {
+  errorMessage.innerText = "";
+  fetchCurrent(city);
+  fetchForecast(city);
+  fetchYouTube(city);
+  mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(city)}&output=embed`;
+}
+
+async function fetchCurrent(city) {
   try {
-    errorMessage.innerText = "";
-    fetchForecast(city);
-    fetchCurrent(city);
-    fetchYouTube(city);
-    mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(city)}&output=embed`;
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${OPENWEATHER_API_KEY}&units=metric`);
+    const weather_data = await res.json();
+
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    currentWeatherDiv.classList.remove("hidden");
+    currentWeatherDiv.innerHTML = `
+      <h2>Real-Time Weather</h2>
+      <div class="forecast-card">
+        <strong>${weather_data.name}</strong><br>
+        ${weather_data.main.temp}°C - ${weather_data.weather[0].description}<br>
+        Humidity: ${weather_data.main.humidity}%<br>
+        Wind: ${weather_data.wind.speed} m/s<br>
+        <em>Updated at: ${timeString}</em>
+      </div>
+    `;
   } catch (err) {
-    showError("Failed to fetch data.");
+    showError("Failed to fetch real-time weather.");
   }
 }
 
@@ -80,23 +100,6 @@ async function fetchForecast(city) {
     card.innerHTML = `<strong>${date}</strong><br>${d.temp.min}°C - ${d.temp.max}°C<br>${d.weather[0].main}`;
     dailyDiv.appendChild(card);
   });
-}
-
-async function fetchCurrent(city) {
-  const res = await fetch(`${backendBase}/weather/search?location=${encodeURIComponent(city)}`);
-  const data = await res.json();
-  if (!data.length) return;
-  const { weather_data } = data[0];
-  currentWeatherDiv.classList.remove("hidden");
-  currentWeatherDiv.innerHTML = `
-    <h2>Real-Time Weather</h2>
-    <div class="forecast-card">
-      <strong>${weather_data.name}</strong><br>
-      ${weather_data.main.temp}°C - ${weather_data.weather[0].description}<br>
-      Humidity: ${weather_data.main.humidity}%<br>
-      Wind: ${weather_data.wind.speed} m/s
-    </div>
-  `;
 }
 
 async function fetchYouTube(city) {
