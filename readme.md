@@ -1,123 +1,158 @@
-Sure! Here's the complete and polished copy of your `README.md` — ready to paste directly into your project:
-
 ---
 
-### ✅ `README.md`
+### ✅ `README.md` (Full Report Style for Student Submission)
 
 ````markdown
-# 🌦️ Full-Stack Weather App
-
-A full-featured, responsive weather app that provides real-time weather updates, a 5-day forecast, YouTube travel videos, Google Map view, and data export features. Built with a modern tech stack and designed to meet the technical assessment requirements from PM Accelerator.
-
----
-
-## 🚀 Features
-
-- 🔍 Search weather by City, Zip Code, Landmark, or GPS
-- 🌐 Real-time weather info with updated timestamp
-- 📅 5-Day Forecast + Hourly Forecast
-- 📍 Detect and display weather based on current location
-- 🔁 Smart autocomplete suggestions via GeoDB API
-- 🎥 YouTube travel videos for searched cities
-- 🗺️ Google Maps embed for each city
-- 🌗 Dark mode toggle
-- ⚙️ Full CRUD operations with MongoDB
-- 📤 Export weather data to JSON, CSV, PDF, and Markdown
-- ❌ Graceful error handling for invalid cities or failed API calls
+# 🌦️ Full-Stack Weather App  
+*Created by Lalith Aditya Chunduri*  
+*Deployed at: [wa-jade.vercel.app](https://wa-jade.vercel.app)*
 
 ---
 
-## 🧰 Technologies Used
+## 🧩 Overview
 
-### 🔹 Frontend
+This project is a full-stack weather application built to demonstrate strong technical proficiency in modern web development, API integration, error handling, and data management. It aligns with the PM Accelerator assessment requirements and showcases real-world developer skills through implementation of location-aware weather reporting, multimedia integration, and backend-driven data persistence and export.
 
-- HTML5, CSS3 (Flexbox + Grid), JavaScript (ES6+)
-- OpenWeatherMap API (Weather + Forecast)
-- GeoDB Cities API (Suggestions)
-- YouTube Data API
+---
+
+## 🌟 Key Features
+
+### ✅ User-Focused Weather Tools
+- Search weather by:
+  - 📍 GPS coordinates
+  - 🏙️ City / Zip code
+  - 🗺️ Landmarks (via smart autocomplete)
+- Real-time weather including:
+  - Temperature, Condition, Humidity, Wind Speed
+  - Displayed with a local `Updated at` timestamp
+- 5-day forecast in a clean grid format
+- Hourly forecast highlights upcoming temperature trends
+- Mobile-responsive layout with dark/light mode toggle
+
+### ✅ Technical Standouts
+- Autocomplete suggestions using GeoDB Cities API
+- Integrated YouTube travel videos based on searched city
+- Embedded Google Map for geographical context
+- Fully implemented CRUD operations on MongoDB
+- Export data as:
+  - 🧾 JSON
+  - 📊 CSV
+  - 📄 PDF
+  - 📝 Markdown
+
+### ✅ Graceful User Experience
+- Clear error handling for invalid cities, location failures, or API errors
+- Friendly UI across all screen sizes (desktop, tablet, mobile)
+- Interactive design enhanced with real icons, transitions, and dark mode
+
+---
+
+## 💻 Technologies Used
+
+### Frontend (Vercel Deployed)
+- HTML5, CSS3 (Flexbox + Grid, Responsive Design)
+- Vanilla JavaScript (ES6+)
+- OpenWeatherMap API
+- GeoDB Cities API (RapidAPI)
+- YouTube Data API v3
 - Google Maps Embed API
 
-### 🔹 Backend
-
-- Node.js + Express
-- MongoDB Atlas (NoSQL DB)
-- Axios
-- CORS, dotenv
-- PDFKit, json2csv, csv-writer, markdown-pdf
-
----
-
-## 🌐 API Routes
-
-### 📡 Weather (Backend)
-| Method | Route                       | Description                          |
-|--------|-----------------------------|--------------------------------------|
-| GET    | `/api/weather/search`       | Fetch real-time weather              |
-| GET    | `/api/forecast?city=`       | Fetch 5-day + hourly forecast        |
-| POST   | `/api/weather/create`       | Store weather for location+date      |
-| GET    | `/api/weather/read`         | Read all saved weather data          |
-| PUT    | `/api/weather/update/:id`   | Update a weather record              |
-| DELETE | `/api/weather/delete/:id`   | Delete a weather record              |
-
-### 🧾 Data Export
-| Format    | Route                  |
-|-----------|------------------------|
-| JSON      | `/api/export/json`     |
-| CSV       | `/api/export/csv`      |
-| PDF       | `/api/export/pdf`      |
-| Markdown  | `/api/export/md`       |
+### Backend (Render Deployed)
+- Node.js + Express.js
+- MongoDB Atlas (NoSQL cloud database)
+- Axios for API requests
+- dotenv for environment variable management
+- PDFKit, json2csv, csv-writer, markdown-pdf for data export
+- CORS, body-parser for middleware and compatibility
 
 ---
 
-## ⚙️ Setup & Installation
+## 🗃️ API Routes (Backend)
+
+### 🔍 Weather Endpoints
+| Method | Endpoint                  | Description                             |
+|--------|---------------------------|-----------------------------------------|
+| GET    | `/api/weather/search`     | Get current weather for a city          |
+| GET    | `/api/forecast?city=...`  | Fetch hourly + 5-day forecast           |
+| POST   | `/api/weather/create`     | Save weather data for location/date     |
+| GET    | `/api/weather/read`       | Retrieve stored weather data            |
+| PUT    | `/api/weather/update/:id` | Modify stored data                      |
+| DELETE | `/api/weather/delete/:id` | Remove a weather record                 |
+
+### 🧾 Export Routes
+| Format    | Route                 |
+|-----------|-----------------------|
+| JSON      | `/api/export/json`    |
+| CSV       | `/api/export/csv`     |
+| PDF       | `/api/export/pdf`     |
+| Markdown  | `/api/export/md`      |
+
+### 🌐 Additional APIs
+- `/api/youtube?city=...` → Fetches travel videos
+- Google Map embedded via iframe
+
+---
+
+## 🧪 Sample Screenshots
+
+![Dark Mode View](./screenshots/dark-mode.png)
+![Light Mode + Forecast](./screenshots/light-mode.png)
+![Mobile View](./screenshots/mobile-forecast.png)
+
+> These screenshots reflect real API data with visual transitions, dark theme support, and dynamic rendering of content based on input.
+
+---
+
+## ⚙️ Setup & Deployment
+
+### Local Setup
 
 ```bash
-# Clone the repository
+# Clone project
 git clone https://github.com/Nightyelf2403/weather-app.git
 cd weather-app
 
 # Backend setup
 cd backend
 npm install
-
-# Setup .env
-# MONGO_URI=
-# OPENWEATHER_API_KEY=
-# YOUTUBE_API_KEY=
-# GOOGLE_MAPS_API_KEY=
-
+touch .env  # add your Mongo URI and API keys here
 npm start
 
-# Frontend setup (if separate)
+# Frontend setup
 cd ../frontend
 npm install
 npm run dev
 ````
 
+### Environment Variables (`.env`)
+
+```env
+PORT=5000
+MONGO_URI=your_mongo_db_atlas_url
+OPENWEATHER_API_KEY=your_openweather_key
+YOUTUBE_API_KEY=your_youtube_data_api_key
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+```
+
+### Deployment
+
+* **Frontend:** Vercel — [https://wa-jade.vercel.app](https://wa-jade.vercel.app)
+* **Backend:** Render — https://wa-c1rh.onrender.com 
+
 ---
 
-## 🧠 About PM Accelerator
+## 🏢 About PM Accelerator
 
-The Product Manager Accelerator Program supports PM professionals at every level — from students to VPs — through real-world experience, mentorship, and hands-on product development with engineers and designers.
-🔗 [Visit PM Accelerator on LinkedIn](https://www.linkedin.com/school/pmaccelerator/about/)
+The **Product Manager Accelerator Program** supports professionals across every stage of their PM careers — from students and entry-level talent to directors and VPs. Through real-world product building, mentorship, and mock interviews, the program equips candidates with modern PM and leadership skills.
+
+🔗 Learn more on [LinkedIn → PM Accelerator](https://www.linkedin.com/school/pmaccelerator/about/)
 
 ---
 
-## ✍️ Author
+## 🙋 Author & Credits
 
 **Lalith Aditya Chunduri**
-[GitHub Profile](https://github.com/Nightyelf2403)
+🖥️ [GitHub Profile](https://github.com/Nightyelf2403)
+💡 Built as a full-stack project for PM Accelerator Tech Assessment (2025)
 
----
-
-## 🖼️ Screenshots
-
-> Add screenshots here showing the main interface, dark mode, mobile view, etc.
-
----
-
-## 📄 License
-
-MIT License (or specify if proprietary)
-
-
+> This is a student-driven personal project. No license is applied — not for production use.
