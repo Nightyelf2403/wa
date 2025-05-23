@@ -1,46 +1,32 @@
+// weather/routes/weather.js
 import express from 'express';
 import axios from 'axios';
 import WeatherRecord from '../models/WeatherRecord.js';
-import { Op } from 'sequelize'; // ✅ required for case-insensitive search
+import { Op } from 'sequelize';
 
 const router = express.Router();
-const OPENWEATHER_API_KEY ="36ffc6ea6c048bb0fcc1752338facd48";
+const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
-// 📌 POST /api/weather/create
 router.post('/create', async (req, res) => {
   try {
     const { location, dateRange } = req.body;
+    if (!location || !dateRange?.from || !dateRange?.to) return res.status(400).json({ error: 'Location and date range are required' });
 
-    if (!location || !dateRange?.from || !dateRange?.to) {
-      return res.status(400).json({ error: 'Location and date range are required' });
-    }
-
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${OPENWEATHER_API_KEY}&units=metric`
-    );
-
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${OPENWEATHER_API_KEY}&units=metric`);
     const weatherData = response.data;
 
-    const record = await WeatherRecord.create({
-      location,
-      date_from: dateRange.from,
-      date_to: dateRange.to,
-      weather_data: weatherData
-    });
-
+    const record = await WeatherRecord.create({ location, date_from: dateRange.from, date_to: dateRange.to, weather_data: weatherData });
     res.status(201).json({ message: 'Weather record saved', record });
   } catch (err) {
-  console.error("❌ Weather Create Error:", err); // 🪵 Log full error
-  if (err.response && err.response.status === 404) {
-    res.status(404).json({ error: 'Location not found' });
-  } else {
-    res.status(500).json({ error: 'Server error', details: err.message });
+    console.error("❌ Weather Create Error:", err);
+    if (err.response && err.response.status === 404) {
+      res.status(404).json({ error: 'Location not found' });
+    } else {
+      res.status(500).json({ error: 'Server error', details: err.message });
+    }
   }
-}
-
 });
 
-// 📌 GET /api/weather/all
 router.get('/all', async (req, res) => {
   try {
     const records = await WeatherRecord.findAll({ order: [['createdAt', 'DESC']] });
@@ -51,23 +37,11 @@ router.get('/all', async (req, res) => {
   }
 });
 
-// 📌 GET /api/weather/search?location=City
 router.get('/search', async (req, res) => {
   const location = req.query.location;
-
   try {
-    const records = await WeatherRecord.findAll({
-      where: {
-        location: {
-          [Op.iLike]: `%${location}%` // 🔍 case-insensitive search
-        }
-      }
-    });
-
-    if (records.length === 0) {
-      return res.status(404).json({ message: 'No records found' });
-    }
-
+    const records = await WeatherRecord.findAll({ where: { location: { [Op.iLike]: `%${location}%` } } });
+    if (records.length === 0) return res.status(404).json({ message: 'No records found' });
     res.json(records);
   } catch (err) {
     console.error('Search error:', err.message);
@@ -75,13 +49,9 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// 📌 PUT /api/weather/update/:id
 router.put('/update/:id', async (req, res) => {
   const { from, to } = req.body;
-
-  if (!from || !to) {
-    return res.status(400).json({ error: 'from and to dates are required' });
-  }
+  if (!from || !to) return res.status(400).json({ error: 'from and to dates are required' });
 
   try {
     const [rowsUpdated, [updatedRecord]] = await WeatherRecord.update(
@@ -89,10 +59,7 @@ router.put('/update/:id', async (req, res) => {
       { where: { id: req.params.id }, returning: true }
     );
 
-    if (!rowsUpdated) {
-      return res.status(404).json({ error: 'Record not found' });
-    }
-
+    if (!rowsUpdated) return res.status(404).json({ error: 'Record not found' });
     res.json({ message: 'Weather record updated', updated: updatedRecord });
   } catch (err) {
     console.error('Update error:', err.message);
@@ -100,15 +67,10 @@ router.put('/update/:id', async (req, res) => {
   }
 });
 
-// 📌 DELETE /api/weather/delete/:id
 router.delete('/delete/:id', async (req, res) => {
   try {
     const deleted = await WeatherRecord.destroy({ where: { id: req.params.id } });
-
-    if (!deleted) {
-      return res.status(404).json({ error: 'Record not found' });
-    }
-
+    if (!deleted) return res.status(404).json({ error: 'Record not found' });
     res.json({ message: 'Weather record deleted' });
   } catch (err) {
     console.error('Delete error:', err.message);
@@ -117,3 +79,5 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 export default router;
+
+
