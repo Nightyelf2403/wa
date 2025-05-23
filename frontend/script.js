@@ -1,81 +1,78 @@
-const backendURL = "https://wa-c1rh.onrender.com/api";
+// frontend/script.js
 
+const backendBase = "https://wa-c1rh.onrender.com/api";
+
+const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
-const locationInput = document.getElementById("locationInput");
-const useLocationBtn = document.getElementById("useLocationBtn");
-const resultSection = document.getElementById("resultSection");
+const locationBtn = document.getElementById("locationBtn");
+const forecastSection = document.getElementById("forecastSection");
+const errorMessage = document.getElementById("errorMessage");
+const hourlyDiv = document.getElementById("hourlyForecast");
+const dailyDiv = document.getElementById("dailyForecast");
 
-searchBtn.addEventListener("click", async () => {
-  const city = locationInput.value.trim();
-  if (!city) return showError("Please enter a city.");
-  await fetchWeather(city);
-});
-
-useLocationBtn.addEventListener("click", () => {
-  if (!navigator.geolocation) {
-    showError("Geolocation not supported in your browser.");
+searchBtn.addEventListener("click", () => {
+  const city = cityInput.value.trim();
+  if (!city) {
+    showError("Please enter a city");
     return;
   }
+  fetchWeather(city);
+});
 
+locationBtn.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    showError("Geolocation is not supported");
+    return;
+  }
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const { latitude, longitude } = pos.coords;
-    await fetchWeatherByCoords(latitude, longitude);
-  }, () => {
-    showError("Failed to get your location.");
+    try {
+      const locRes = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=YOUR_OPENWEATHER_API_KEY`);
+      const [locData] = await locRes.json();
+      if (!locData || !locData.name) throw new Error();
+      cityInput.value = locData.name;
+      fetchWeather(locData.name);
+    } catch {
+      showError("Failed to detect city from location");
+    }
   });
 });
 
+function showError(msg) {
+  errorMessage.innerText = msg;
+  forecastSection.style.display = "none";
+}
+
 async function fetchWeather(city) {
   try {
-    const res = await fetch(`${backendURL}/forecast?city=${encodeURIComponent(city)}`);
+    errorMessage.innerText = "";
+    const res = await fetch(`${backendBase}/forecast?city=${encodeURIComponent(city)}`);
     const data = await res.json();
-
     if (data.error) {
       showError("City not found or forecast unavailable.");
       return;
     }
 
-    displayForecast(data);
+    forecastSection.style.display = "block";
+    hourlyDiv.innerHTML = "";
+    data.hourly.forEach((h) => {
+      const card = document.createElement("div");
+      card.className = "forecast-card";
+      const time = new Date(h.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      card.innerHTML = `<strong>${time}</strong><br>${h.temp}&#8451;<br>${h.weather[0].main}`;
+      hourlyDiv.appendChild(card);
+    });
+
+    dailyDiv.innerHTML = "";
+    data.daily.forEach((d) => {
+      const card = document.createElement("div");
+      card.className = "forecast-card";
+      const date = new Date(d.dt * 1000).toDateString();
+      card.innerHTML = `<strong>${date}</strong><br>${d.temp.min}&#8451; - ${d.temp.max}&#8451;<br>${d.weather[0].main}`;
+      dailyDiv.appendChild(card);
+    });
   } catch (err) {
+    console.error(err);
     showError("Error fetching data.");
   }
-}
-
-async function fetchWeatherByCoords(lat, lon) {
-  try {
-    const res = await fetch(`${backendURL}/forecast?lat=${lat}&lon=${lon}`);
-    const data = await res.json();
-
-    if (data.error) {
-      showError("Could not fetch forecast for your location.");
-      return;
-    }
-
-    displayForecast(data);
-  } catch (err) {
-    showError("Error fetching location data.");
-  }
-}
-
-function showError(msg) {
-  resultSection.innerHTML = `<p style="color:red; font-weight:bold;">${msg}</p>`;
-}
-
-function displayForecast(data) {
-  let html = `<h3>${data.city}</h3><div class="forecast-grid">`;
-
-  data.daily.slice(0, 5).forEach(day => {
-    const date = new Date(day.dt * 1000).toDateString();
-    html += `
-      <div class="forecast-card">
-        <p><strong>${date}</strong></p>
-        <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="${day.weather[0].description}" />
-        <p>${day.weather[0].main}</p>
-        <p>${day.temp.min}°C - ${day.temp.max}°C</p>
-      </div>
-    `;
-  });
-
-  html += "</div>";
-  resultSection.innerHTML = html;
 }
