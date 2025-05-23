@@ -90,22 +90,6 @@ iframe {
   margin-top: 1rem;
 }
 
-footer {
-  margin-top: 2rem;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-footer a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
 .toggle-container {
   position: absolute;
   top: 10px;
@@ -115,34 +99,89 @@ footer a:hover {
   gap: 0.5rem;
 }
 
-/* Dark mode */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 22px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px; width: 16px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #007bff;
+}
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+.corner-credit {
+  position: fixed;
+  bottom: 15px;
+  right: 20px;
+  font-size: 0.9rem;
+  color: #555;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+}
+
+.corner-credit a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.corner-credit a:hover {
+  text-decoration: underline;
+}
+
+/* Dark Mode */
 body.dark-mode {
   background: #121212;
   color: #eee;
 }
-
 body.dark-mode .container {
   background: #1e1e1e;
 }
-
 body.dark-mode .forecast-card {
   background: #2c2c2c;
   color: #ddd;
 }
-
 body.dark-mode input,
 body.dark-mode button {
   background: #333;
   color: #eee;
   border: 1px solid #555;
 }
-
 body.dark-mode button:hover {
   background-color: #444;
 }
-
-body.dark-mode footer {
-  color: #aaa;
+body.dark-mode .corner-credit {
+  background-color: rgba(30, 30, 30, 0.8);
+  color: #ddd;
 }
 
 @media (max-width: 600px) {
