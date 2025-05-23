@@ -2,9 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body.dark-mode {
+      background: linear-gradient(to bottom, #1a1a1a, #333);
+      color: #f0f0f0;
+    }
+    .container.dark-mode {
+      background: #2b2b2b;
+      color: #f0f0f0;
+    }
+    .forecast-card.dark-mode {
+      background: #444;
+      color: #f0f0f0;
+    }
+    button.dark-mode {
+      background-color: #444;
+      color: white;
+    }
+    button.dark-mode:hover {
+      background-color: #222;
+    }
+  </style>
 </head>
 <body>
   <div class="toggle-container">
@@ -15,7 +36,7 @@
     <span>Dark Mode</span>
   </div>
 
-  <div class="container">
+  <div class="container" id="mainContainer">
     <h1>☀️ Weather App</h1>
     <div class="search-bar">
       <input type="text" id="cityInput" placeholder="Enter city..." />
@@ -37,10 +58,8 @@
       <div id="youtubeVideos" class="video-grid"></div>
 
       <h2>City Map</h2>
-      <iframe id="cityMap" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe id="cityMap" allowfullscreen="" loading="lazy"></iframe>
     </div>
   </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <script>
