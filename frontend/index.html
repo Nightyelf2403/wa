@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -10,12 +10,12 @@
   <div class="toggle-container">
     <label class="switch">
       <input type="checkbox" id="darkModeToggle" />
-      <span class="slider"></span>
+      <span class="slider round"></span>
     </label>
-    <span>Dark Mode</span>
+    <span class="toggle-label">Dark Mode</span>
   </div>
 
-  <div class="container" id="mainContainer">
+  <div class="container">
     <h1>☀️ Weather App</h1>
     <div class="search-bar">
       <input type="text" id="cityInput" placeholder="Enter city..." />
@@ -37,12 +37,14 @@
       <div id="youtubeVideos" class="video-grid"></div>
 
       <h2>City Map</h2>
-      <iframe id="cityMap" allowfullscreen="" loading="lazy"></iframe>
+      <iframe id="cityMap" allowfullscreen loading="lazy"></iframe>
     </div>
   </div>
 
-  <footer style="text-align: center; margin-top: 2rem; padding: 1rem; color: #555;">
-    Created by <a href="https://github.com/Nightyelf2403" target="_blank" style="color: #007bff; text-decoration: none;">Lalith Aditya</a>
-  </footer>
+  <div class="corner-credit">
+    Created by <a href="https://github.com/Nightyelf2403" target="_blank">Lalith Aditya</a>
+  </div>
 
-  <script>
+  <script src="script.js"></script>
+</body>
+</html>
