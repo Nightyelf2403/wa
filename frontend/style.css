@@ -1,5 +1,6 @@
-/* style.css */
-
+/* ======================== */
+/* ===== style.css ======= */
+/* ======================== */
 body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
@@ -53,16 +54,12 @@ button:hover {
   background-color: #0056b3;
 }
 
-#errorMessage {
+#error {
   color: red;
   margin-top: 1rem;
 }
 
-#hourly, #daily {
-  margin-top: 2rem;
-}
-
-.forecast-grid {
+.forecast-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -75,12 +72,7 @@ button:hover {
   padding: 1rem;
   border-radius: 10px;
   width: 120px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.forecast-card img {
-  width: 40px;
-  height: 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
