@@ -8,7 +8,6 @@ const resultSection = document.getElementById("resultSection");
 searchBtn.addEventListener("click", async () => {
   const city = locationInput.value.trim();
   if (!city) return showError("Please enter a city.");
-
   await fetchWeather(city);
 });
 
