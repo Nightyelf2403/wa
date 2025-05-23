@@ -10,10 +10,15 @@ const dailyDiv = document.getElementById("dailyForecast");
 const currentWeatherDiv = document.getElementById("currentWeather");
 const mapFrame = document.getElementById("cityMap");
 const youtubeSection = document.getElementById("youtubeVideos");
+const mainContainer = document.getElementById("mainContainer");
 
 // Toggle dark mode
-document.getElementById("darkModeToggle").addEventListener("change", () => {
+const darkToggle = document.getElementById("darkModeToggle");
+darkToggle.addEventListener("change", () => {
   document.body.classList.toggle("dark-mode");
+  mainContainer.classList.toggle("dark-mode");
+  document.querySelectorAll(".forecast-card").forEach(card => card.classList.toggle("dark-mode"));
+  document.querySelectorAll("button").forEach(btn => btn.classList.toggle("dark-mode"));
 });
 
 searchBtn.addEventListener("click", () => {
