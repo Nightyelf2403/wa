@@ -3,10 +3,55 @@ const backendBase = "https://app-jvpd.onrender.com/api";
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
 const geoBtn = document.getElementById("geoBtn");
+const errorBox = document.getElementById("error");
 const forecast = document.getElementById("forecast");
-const error = document.getElementById("error");
 const hourly = document.getElementById("hourly");
 const daily = document.getElementById("daily");
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  forecast.classList.add("hidden");
+}
+
+function clearError() {
+  errorBox.textContent = "";
+}
+
+async function fetchForecast(city) {
+  try {
+    clearError();
+    const res = await fetch(`${backendBase}/forecast?city=${encodeURIComponent(city)}`);
+    const data = await res.json();
+
+    if (data.error) {
+      showError("City not found or weather data unavailable.");
+      return;
+    }
+
+    forecast.classList.remove("hidden");
+    hourly.innerHTML = "";
+    daily.innerHTML = "";
+
+    data.hourly.forEach((entry) => {
+      const div = document.createElement("div");
+      div.className = "forecast-card";
+      const time = new Date(entry.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      div.innerHTML = `<strong>${time}</strong><br>${entry.temp}°C<br>${entry.weather[0].main}`;
+      hourly.appendChild(div);
+    });
+
+    data.daily.forEach((entry) => {
+      const div = document.createElement("div");
+      div.className = "forecast-card";
+      const date = new Date(entry.dt * 1000).toDateString();
+      div.innerHTML = `<strong>${date}</strong><br>${entry.temp.min}°C - ${entry.temp.max}°C<br>${entry.weather[0].main}`;
+      daily.appendChild(div);
+    });
+  } catch (err) {
+    console.error(err);
+    showError("Something went wrong fetching weather.");
+  }
+}
 
 searchBtn.addEventListener("click", () => {
   const city = cityInput.value.trim();
@@ -19,56 +64,19 @@ searchBtn.addEventListener("click", () => {
 
 geoBtn.addEventListener("click", () => {
   if (!navigator.geolocation) {
-    showError("Geolocation not supported");
+    showError("Geolocation not supported by your browser.");
     return;
   }
-  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-    const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${coords.latitude}&lon=${coords.longitude}&limit=1&appid=36ffc6ea6c048bb0fcc1752338facd48`;
-    const response = await fetch(url);
-    const data = await response.json();
-    const city = data[0]?.name;
-    if (city) {
-      cityInput.value = city;
-      fetchForecast(city);
-    } else {
-      showError("City not found from location");
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const { latitude, longitude } = pos.coords;
+    try {
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=YOUR_OPENWEATHER_API_KEY`);
+      const data = await response.json();
+      if (!data[0]?.name) throw new Error();
+      cityInput.value = data[0].name;
+      fetchForecast(data[0].name);
+    } catch {
+      showError("Failed to detect location.");
     }
   });
 });
-
-function showError(msg) {
-  error.innerText = msg;
-  forecast.classList.add("hidden");
-}
-
-async function fetchForecast(city) {
-  try {
-    const res = await fetch(`${backendBase}/forecast?city=${encodeURIComponent(city)}`);
-    const data = await res.json();
-    if (data.error) return showError("Could not fetch forecast for your location.");
-
-    error.innerText = "";
-    forecast.classList.remove("hidden");
-
-    hourly.innerHTML = "";
-    data.hourly.forEach(h => {
-      const card = document.createElement("div");
-      card.className = "forecast-card";
-      const time = new Date(h.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      card.innerHTML = `<strong>${time}</strong><br>${h.temp}°C<br>${h.weather[0].main}`;
-      hourly.appendChild(card);
-    });
-
-    daily.innerHTML = "";
-    data.daily.forEach(d => {
-      const card = document.createElement("div");
-      card.className = "forecast-card";
-      const date = new Date(d.dt * 1000).toDateString();
-      card.innerHTML = `<strong>${date}</strong><br>${d.temp.min}°C - ${d.temp.max}°C<br>${d.weather[0].main}`;
-      daily.appendChild(card);
-    });
-  } catch (err) {
-    console.error(err);
-    showError("Error fetching data.");
-  }
-}
