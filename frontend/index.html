@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Dark Mode Toggle -->
   <div class="toggle-container">
     <label class="switch">
       <input type="checkbox" id="darkModeToggle" />
@@ -15,19 +16,25 @@
     <span class="toggle-label">Dark Mode</span>
   </div>
 
+  <!-- Main Weather Container -->
   <div class="container">
     <h1>☀️ Weather App</h1>
+    
+    <!-- Search Input -->
     <div class="search-bar">
-      <input type="text" id="cityInput" list="citySuggestions" placeholder="Enter city..." />
+      <input type="text" id="cityInput" list="citySuggestions" placeholder="Enter city, zip, landmark..." />
       <datalist id="citySuggestions"></datalist>
-
       <button id="searchBtn">Search</button>
       <button id="geoBtn">📍 Use My Location</button>
     </div>
+
+    <!-- Error Message -->
     <div id="errorMessage" class="error"></div>
 
+    <!-- Real-time Weather -->
     <div id="currentWeather" class="hidden"></div>
 
+    <!-- Forecast Section -->
     <div id="forecastSection" class="forecast hidden">
       <h2>Hourly Forecast</h2>
       <div id="hourlyForecast" class="forecast-grid"></div>
@@ -43,10 +50,23 @@
     </div>
   </div>
 
-  <div class="corner-credit">
-    Created by <a href="https://github.com/Nightyelf2403" target="_blank">Lalith Aditya</a>
+  <!-- PM Accelerator Description -->
+  <div class="pm-accelerator">
+    <h3>About PM Accelerator</h3>
+    <p>
+      The Product Manager Accelerator Program is designed to support PM professionals at every stage of their careers —
+      from students and entry-level roles to leadership positions like Directors and VPs. Our community is ambitious and committed, helping members master new PM and leadership skills, gain job referrals, and build real products alongside engineers and designers.
+      <br><br>
+      Learn more on <a href="https://www.linkedin.com/school/pmaccelerator/about/" target="_blank">LinkedIn</a>.
+    </p>
   </div>
 
+  <!-- Floating GitHub Credit -->
+  <div class="corner-credit">
+    Created by <a href="https://github.com/Nightyelf2403" target="_blank">Lalith Aditya Chunduri</a>
+  </div>
+
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
