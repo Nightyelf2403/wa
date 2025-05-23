@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌤️ Weather App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>☀️ Weather App</h1>
+    <h1>🌤️ Weather App</h1>
     <div class="search-bar">
-      <input type="text" id="cityInput" placeholder="Enter city...">
+      <input type="text" id="cityInput" placeholder="Enter city..." />
       <button id="searchBtn">Search</button>
       <button id="geoBtn">📍 Use My Location</button>
     </div>
+
     <div id="errorMessage" class="error"></div>
 
     <div id="forecastSection" class="forecast hidden">
@@ -22,86 +23,23 @@
 
       <h2>5-Day Forecast</h2>
       <div id="dailyForecast" class="forecast-grid"></div>
+
+      <h2>Travel Videos</h2>
+      <div id="youtubeVideos" class="video-grid"></div>
+
+      <h2>City Map</h2>
+      <iframe
+        id="cityMap"
+        width="100%"
+        height="300"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
     </div>
   </div>
 
-  <script>
-    const backendBase = "https://wa-c1rh.onrender.com/api";
-
-    const cityInput = document.getElementById("cityInput");
-    const searchBtn = document.getElementById("searchBtn");
-    const geoBtn = document.getElementById("geoBtn");
-    const forecastSection = document.getElementById("forecastSection");
-    const errorMessage = document.getElementById("errorMessage");
-    const hourlyDiv = document.getElementById("hourlyForecast");
-    const dailyDiv = document.getElementById("dailyForecast");
-
-    searchBtn.addEventListener("click", () => {
-      const city = cityInput.value.trim();
-      if (!city) {
-        showError("Please enter a city");
-        return;
-      }
-      fetchWeather(city);
-    });
-
-    geoBtn.addEventListener("click", () => {
-      if (!navigator.geolocation) {
-        showError("Geolocation is not supported");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { latitude, longitude } = pos.coords;
-        try {
-          const locRes = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=36ffc6ea6c048bb0fcc1752338facd48`);
-          const [locData] = await locRes.json();
-          if (!locData || !locData.name) throw new Error();
-          cityInput.value = locData.name;
-          fetchWeather(locData.name);
-        } catch {
-          showError("Failed to detect city from location");
-        }
-      });
-    });
-
-    function showError(msg) {
-      errorMessage.innerText = msg;
-      forecastSection.classList.add("hidden");
-    }
-
-    async function fetchWeather(city) {
-      try {
-        errorMessage.innerText = "";
-        const res = await fetch(`${backendBase}/forecast?city=${encodeURIComponent(city)}`);
-        const data = await res.json();
-        if (data.error) {
-          showError("City not found or forecast unavailable.");
-          return;
-        }
-
-        forecastSection.classList.remove("hidden");
-        hourlyDiv.innerHTML = "";
-        data.hourly.forEach((h) => {
-          const card = document.createElement("div");
-          card.className = "forecast-card";
-          const time = new Date(h.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-          card.innerHTML = `<strong>${time}</strong><br>${h.temp}&#8451;<br>${h.weather[0].main}`;
-          hourlyDiv.appendChild(card);
-        });
-
-        dailyDiv.innerHTML = "";
-        data.daily.forEach((d) => {
-          const card = document.createElement("div");
-          card.className = "forecast-card";
-          const date = new Date(d.dt * 1000).toDateString();
-          card.innerHTML = `<strong>${date}</strong><br>${d.temp.min}&#8451; - ${d.temp.max}&#8451;<br>${d.weather[0].main}`;
-          dailyDiv.appendChild(card);
-        });
-      } catch (err) {
-        console.error(err);
-        showError("Error fetching data.");
-      }
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
