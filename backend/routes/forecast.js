@@ -1,43 +1,31 @@
+// weather/routes/forecast.js
 import express from 'express';
 import axios from 'axios';
 
 const router = express.Router();
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
-// Utility to fetch lat/lon for a city
 async function getLatLon(city) {
-  const response = await axios.get(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${OPENWEATHER_API_KEY}`
-  );
+  const response = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${OPENWEATHER_API_KEY}`);
   if (!response.data.length) throw new Error('City not found');
-  return {
-    lat: response.data[0].lat,
-    lon: response.data[0].lon,
-  };
+  return { lat: response.data[0].lat, lon: response.data[0].lon };
 }
 
-// 📌 GET /api/forecast?city=London
 router.get('/', async (req, res) => {
   try {
     const city = req.query.city;
     if (!city) return res.status(400).json({ error: 'City is required' });
 
     const { lat, lon } = await getLatLon(city);
-    console.log(`📍 Coordinates for ${city}: ${lat}, ${lon}`);
-
-    const forecastRes = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${OPENWEATHER_API_KEY}`
-    );
+    const forecastRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${OPENWEATHER_API_KEY}`);
     const data = forecastRes.data;
 
-    // Extract 12-hour forecast (3-hour intervals)
     const hourly = data.list.slice(0, 4).map(entry => ({
       dt: entry.dt,
       temp: entry.main.temp,
-      weather: entry.weather,
+      weather: entry.weather
     }));
 
-    // Group by date for 5-day daily forecast
     const dailyMap = {};
     data.list.forEach(entry => {
       const date = new Date(entry.dt * 1000).toISOString().split('T')[0];
@@ -45,7 +33,7 @@ router.get('/', async (req, res) => {
         dailyMap[date] = {
           dt: entry.dt,
           temp: { min: entry.main.temp_min, max: entry.main.temp_max },
-          weather: entry.weather,
+          weather: entry.weather
         };
       } else {
         dailyMap[date].temp.min = Math.min(dailyMap[date].temp.min, entry.main.temp_min);
@@ -62,3 +50,5 @@ router.get('/', async (req, res) => {
 });
 
 export default router;
+
+
