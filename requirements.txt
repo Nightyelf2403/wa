@@ -1,0 +1,12 @@
+express
+axios
+dotenv
+cors
+mongoose
+csv-writer
+json2csv
+pdfkit
+markdown-pdf
+
+Install with:
+npm install express axios dotenv cors mongoose csv-writer json2csv pdfkit markdown-pdf
