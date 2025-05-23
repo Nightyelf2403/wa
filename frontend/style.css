@@ -99,3 +99,27 @@ iframe {
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   }
 }
+
+body.dark-mode {
+  background: linear-gradient(to bottom, #1a1a1a, #333);
+  color: #f0f0f0;
+}
+
+.container.dark-mode {
+  background: #2b2b2b;
+  color: #f0f0f0;
+}
+
+.forecast-card.dark-mode {
+  background: #444;
+  color: #f0f0f0;
+}
+
+button.dark-mode {
+  background-color: #444;
+  color: white;
+}
+
+button.dark-mode:hover {
+  background-color: #222;
+}
