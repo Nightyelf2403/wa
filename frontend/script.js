@@ -1,5 +1,7 @@
 const OPENWEATHER_API_KEY = "36ffc6ea6c048bb0fcc1752338facd48";
 const backendBase = "https://wa-c1rh.onrender.com/api";
+const RAPIDAPI_KEY = "7f735282efmshce0eccb67be20bdp13e90cjsn552d58dcfa0e";
+const datalist = document.getElementById("citySuggestions");
 
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -37,6 +39,32 @@ geoBtn.addEventListener("click", () => {
     }
   });
 });
+
+cityInput.addEventListener("input", async () => {
+  const query = cityInput.value;
+  if (query.length < 3) return;
+
+  try {
+    const res = await fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=5`, {
+      headers: {
+        'X-RapidAPI-Key': RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+      }
+    });
+
+    const data = await res.json();
+    datalist.innerHTML = "";
+
+    (data.data || []).forEach(city => {
+      const option = document.createElement("option");
+      option.value = `${city.city}, ${city.country}`;
+      datalist.appendChild(option);
+    });
+  } catch {
+    console.log("City suggestions failed");
+  }
+});
+
 
 function showError(msg) {
   errorMessage.innerText = msg;
