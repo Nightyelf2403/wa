@@ -45,7 +45,7 @@ cityInput.addEventListener("input", async () => {
   if (query.length < 3) return;
 
   try {
-    const res = await fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=5`, {
+    const res = await fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=10`, {
       headers: {
         'X-RapidAPI-Key': RAPIDAPI_KEY,
         'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
