@@ -158,6 +158,15 @@ input:checked + .slider:before {
   text-decoration: underline;
 }
 
+.pm-accelerator {
+  margin-top: 3rem;
+  padding: 1rem;
+  max-width: 700px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #444;
+}
+
 /* Dark Mode */
 body.dark-mode {
   background: #121212;
@@ -182,6 +191,9 @@ body.dark-mode button:hover {
 body.dark-mode .corner-credit {
   background-color: rgba(30, 30, 30, 0.8);
   color: #ddd;
+}
+body.dark-mode .pm-accelerator {
+  color: #ccc;
 }
 
 @media (max-width: 600px) {
