@@ -1,7 +1,7 @@
 # 🌦️ Full-Stack Weather App  
 
 **Created by:** Lalith Aditya Chunduri  
-**Deployed at:** [wa-jade.vercel.app](https://wa-jade.vercel.app)  
+**Deployed at:** [Vercel](https://wa-jade.vercel.app)  
 🎥 **Walkthrough Video:** [Watch here](https://go.screenpal.com/watch/cThZfGn6Olw)
 
 ---
