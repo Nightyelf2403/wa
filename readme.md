@@ -184,6 +184,6 @@ The **Product Manager Accelerator Program** supports professionals across every 
 
 **Lalith Aditya Chunduri**
 🖥️ [GitHub Profile](https://github.com/Nightyelf2403)
-📬 Reach me: [lalithchunduri@gmail.com](mailto:lalithchunduri@gmail.com) | [LinkedIn](https://www.linkedin.com/in/lalith-aditya)
+📬 Reach me: [lalithchunduri@gmail.com](mailto:lalithadityachunduri@gmail.com) | [LinkedIn](https://www.linkedin.com/in/lalith-aditya-chunduri-76573421a/)
 
 > This is a student-driven personal project. No license is applied — not for production use.
