@@ -11,33 +11,40 @@ This project is a full-stack weather application built to demonstrate strong tec
 
 ---
 
-weather-app/
-│
-├── backend/
-│   ├── app.js                  # Main Express server setup – initializes routes and middleware
-│   ├── .env                    # Environment file (API keys, DB URI, secrets)
-│   ├── package.json            # Node.js dependencies and scripts
-│   ├── package-lock.json       # Dependency lock file
-│   │
-│   ├── db/
-│   │   └── sequelize.js        # Sequelize ORM configuration and DB connection
-│   │
-│   ├── models/
-│   │   └── WeatherRecord.js    # Sequelize model defining structure of weather records
-│   │
-│   ├── routes/
-│       ├── weather.js          # CRUD operations and real-time weather API integration
-│       ├── forecast.js         # Handles 5-day and hourly forecast data fetch
-│       ├── youtube.js          # Fetches YouTube travel videos for a given city
-│       └── export.js           # Handles data export (JSON, CSV, PDF, Markdown)
-│
-├── frontend/
-│   ├── index.html              # UI layout with inputs, toggle, containers for forecast/map
-│   ├── style.css               # App styling including responsive layout and dark mode
-│   └── script.js               # JS logic: user input, API calls, dark mode toggle, DOM updates
-│
-├── README.md                   # Project overview, setup instructions, and documentation
-└── requirements.txt            # (Optional) Lists libraries/tools used, typically for backend
+
+---
+
+### 🔍 File Role Summary
+
+#### 🔹 Frontend (HTML/CSS/JavaScript)
+
+- `index.html` – Builds the web interface with city input, forecast cards, map, and videos.
+- `style.css` – Provides the responsive design, grid layout, and dark mode styling.
+- `script.js` – Handles:
+  - City search and GeoDB autocomplete
+  - Current weather and forecast API calls
+  - Map embedding and YouTube video rendering
+  - Theme switching and DOM manipulation
+
+#### 🔹 Backend (Node.js, Express, Sequelize)
+
+- `app.js` – Main entry point that initializes Express and mounts route files.
+- `sequelize.js` – Connects to the database using Sequelize ORM.
+- `WeatherRecord.js` – Defines how weather data is stored in the database (city, range, temperature, etc.).
+- `weather.js` – Handles:
+  - Real-time weather search (`/search`)
+  - Weather record creation, reading, updating, and deletion
+- `forecast.js` – Calls OpenWeatherMap to get 5-day and hourly forecasts.
+- `youtube.js` – Returns YouTube travel videos based on searched city.
+- `export.js` – Exports data from the DB in various formats (JSON, CSV, PDF, MD).
+
+#### 🔹 Other Files
+
+- `.env` – Stores private API keys and database credentials (not pushed to repo).
+- `package.json` – Lists backend dependencies (`express`, `axios`, `sequelize`, etc.).
+- `requirements.txt` – Reference list of APIs/tools used for reviewers.
+
+---
 
 
 ## 🌟 Key Features
