@@ -11,6 +11,35 @@ This project is a full-stack weather application built to demonstrate strong tec
 
 ---
 
+weather-app/
+│
+├── backend/
+│   ├── app.js                  # Main Express server setup – initializes routes and middleware
+│   ├── .env                    # Environment file (API keys, DB URI, secrets)
+│   ├── package.json            # Node.js dependencies and scripts
+│   ├── package-lock.json       # Dependency lock file
+│   │
+│   ├── db/
+│   │   └── sequelize.js        # Sequelize ORM configuration and DB connection
+│   │
+│   ├── models/
+│   │   └── WeatherRecord.js    # Sequelize model defining structure of weather records
+│   │
+│   ├── routes/
+│       ├── weather.js          # CRUD operations and real-time weather API integration
+│       ├── forecast.js         # Handles 5-day and hourly forecast data fetch
+│       ├── youtube.js          # Fetches YouTube travel videos for a given city
+│       └── export.js           # Handles data export (JSON, CSV, PDF, Markdown)
+│
+├── frontend/
+│   ├── index.html              # UI layout with inputs, toggle, containers for forecast/map
+│   ├── style.css               # App styling including responsive layout and dark mode
+│   └── script.js               # JS logic: user input, API calls, dark mode toggle, DOM updates
+│
+├── README.md                   # Project overview, setup instructions, and documentation
+└── requirements.txt            # (Optional) Lists libraries/tools used, typically for backend
+
+
 ## 🌟 Key Features
 
 ### ✅ User-Focused Weather Tools
