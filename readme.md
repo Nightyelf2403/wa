@@ -153,3 +153,37 @@ npm start
 cd ../frontend
 npm install
 npm run dev
+````
+
+### 🔐 Environment Variables (`.env`)
+
+```env
+PORT=5000
+MONGO_URI=your_mongo_db_atlas_url
+OPENWEATHER_API_KEY=your_openweather_key
+YOUTUBE_API_KEY=your_youtube_data_api_key
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+```
+
+### 🚀 Deployment
+
+* **Frontend:** Vercel — [https://wa-jade.vercel.app](https://wa-jade.vercel.app)
+* **Backend:** Render — [https://wa-c1rh.onrender.com](https://wa-c1rh.onrender.com)
+
+---
+
+## 🏢 About PM Accelerator
+
+The **Product Manager Accelerator Program** supports professionals across every stage of their PM careers — from students and entry-level talent to directors and VPs. Through real-world product building, mentorship, and mock interviews, the program equips candidates with modern PM and leadership skills.
+
+🔗 Learn more on [LinkedIn → PM Accelerator](https://www.linkedin.com/school/pmaccelerator/about/)
+
+---
+
+## 🙋 Author & Credits
+
+**Lalith Aditya Chunduri**
+🖥️ [GitHub Profile](https://github.com/Nightyelf2403)
+📬 Reach me: [lalithchunduri@gmail.com](mailto:lalithchunduri@gmail.com) | [LinkedIn](https://www.linkedin.com/in/lalith-aditya)
+
+> This is a student-driven personal project. No license is applied — not for production use.
