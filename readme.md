@@ -1,19 +1,14 @@
-
 # 🌦️ Full-Stack Weather App  
 
 **Created by:** Lalith Aditya Chunduri  
 **Deployed at:** [wa-jade.vercel.app](https://wa-jade.vercel.app)  
 🎥 **Walkthrough Video:** [Watch here](https://go.screenpal.com/watch/cThZfGn6Olw)
 
-
 ---
 
 ## 🧩 Overview
 
 This project is a full-stack weather application built to demonstrate strong technical proficiency in modern web development, API integration, error handling, and data management. It aligns with the PM Accelerator assessment requirements and showcases real-world developer skills through implementation of location-aware weather reporting, multimedia integration, and backend-driven data persistence and export.
-
----
-
 
 ---
 
@@ -29,10 +24,10 @@ This project is a full-stack weather application built to demonstrate strong tec
   - Map embedding and YouTube video rendering
   - Theme switching and DOM manipulation
 
-#### 🔹 Backend (Node.js, Express, Sequelize)
+#### 🔹 Backend (Node.js, Express, MongoDB)
 
 - `app.js` – Main entry point that initializes Express and mounts route files.
-- `sequelize.js` – Connects to the database using Sequelize ORM.
+- `db.js` – Connects to MongoDB Atlas using Mongoose.
 - `WeatherRecord.js` – Defines how weather data is stored in the database (city, range, temperature, etc.).
 - `weather.js` – Handles:
   - Real-time weather search (`/search`)
@@ -44,11 +39,9 @@ This project is a full-stack weather application built to demonstrate strong tec
 #### 🔹 Other Files
 
 - `.env` – Stores private API keys and database credentials (not pushed to repo).
-- `package.json` – Lists backend dependencies (`express`, `axios`, `sequelize`, etc.).
-- `requirements.txt` – Reference list of APIs/tools used for reviewers.
+- `package.json` – Lists backend dependencies (`express`, `axios`, `mongoose`, etc.).
 
 ---
-
 
 ## 🌟 Key Features
 
@@ -57,7 +50,7 @@ This project is a full-stack weather application built to demonstrate strong tec
   - 📍 GPS coordinates
   - 🏙️ City / Zip code
   - 🗺️ Landmarks (via smart autocomplete)
-- Real-time weather including:
+- Real-time weather details including:
   - Temperature, Condition, Humidity, Wind Speed
   - Displayed with a local `Updated at` timestamp
 - 5-day forecast in a clean grid format
@@ -68,7 +61,7 @@ This project is a full-stack weather application built to demonstrate strong tec
 - Autocomplete suggestions using GeoDB Cities API
 - Integrated YouTube travel videos based on searched city
 - Embedded Google Map for geographical context
-- Fully implemented CRUD operations on MongoDB
+- Fully implemented CRUD operations on MongoDB Atlas
 - Export data as:
   - 🧾 JSON
   - 📊 CSV
@@ -77,7 +70,7 @@ This project is a full-stack weather application built to demonstrate strong tec
 
 ### ✅ Graceful User Experience
 - Clear error handling for invalid cities, location failures, or API errors
-- Friendly UI across all screen sizes (desktop, tablet, mobile)
+- Responsive and user-friendly UI across all screen sizes (desktop, tablet, mobile)
 - Interactive design enhanced with real icons, transitions, and dark mode
 
 ---
@@ -95,6 +88,7 @@ This project is a full-stack weather application built to demonstrate strong tec
 ### Backend (Render Deployed)
 - Node.js + Express.js
 - MongoDB Atlas (NoSQL cloud database)
+- Mongoose for MongoDB schema and model management
 - Axios for API requests
 - dotenv for environment variable management
 - PDFKit, json2csv, csv-writer, markdown-pdf for data export
@@ -115,23 +109,23 @@ This project is a full-stack weather application built to demonstrate strong tec
 | DELETE | `/api/weather/delete/:id` | Remove a weather record                 |
 
 ### 🧾 Export Routes
-| Format    | Route                 |
-|-----------|-----------------------|
-| JSON      | `/api/export/json`    |
-| CSV       | `/api/export/csv`     |
-| PDF       | `/api/export/pdf`     |
-| Markdown  | `/api/export/md`      |
+| Format    | Route                 | View/Download                           |
+|-----------|-----------------------|------------------------------------------|
+| JSON      | `/api/export/json`    | View in browser                          |
+| CSV       | `/api/export/csv`     | View/download CSV                        |
+| PDF       | `/api/export/pdf`     | Download PDF                             |
+| Markdown  | `/api/export/md`      | Download .md file                        |
 
 ### 🌐 Additional APIs
-- `/api/youtube?city=...` → Fetches travel videos
-- Google Map embedded via iframe
+- `/api/youtube?city=...` → Fetches YouTube travel videos
+- Google Map is embedded using iframe on the frontend
 
 ---
 
 ## 🧪 Sample Screenshots
 
-![Dark Mode View](./screenshots/dark-mode.png)
-![Light Mode + Forecast](./screenshots/light-mode.png)
+![Dark Mode View](./screenshots/dark-mode.png)  
+![Light Mode + Forecast](./screenshots/light-mode.png)  
 ![Mobile View](./screenshots/mobile-forecast.png)
 
 > These screenshots reflect real API data with visual transitions, dark theme support, and dynamic rendering of content based on input.
@@ -140,7 +134,7 @@ This project is a full-stack weather application built to demonstrate strong tec
 
 ## ⚙️ Setup & Deployment
 
-### Local Setup
+### 🔧 Local Setup
 
 ```bash
 # Clone project
@@ -150,44 +144,12 @@ cd weather-app
 # Backend setup
 cd backend
 npm install
-touch .env  # add your Mongo URI and API keys here
+# Create .env file (on Unix)
+touch .env
+# On Windows, create a .env file manually
 npm start
 
 # Frontend setup
 cd ../frontend
 npm install
 npm run dev
-````
-
-### Environment Variables (`.env`)
-
-```env
-PORT=5000
-MONGO_URI=your_mongo_db_atlas_url
-OPENWEATHER_API_KEY=your_openweather_key
-YOUTUBE_API_KEY=your_youtube_data_api_key
-GOOGLE_MAPS_API_KEY=your_google_maps_key
-```
-
-### Deployment
-
-* **Frontend:** Vercel — [https://wa-jade.vercel.app](https://wa-jade.vercel.app)
-* **Backend:** Render — https://wa-c1rh.onrender.com 
-
----
-
-## 🏢 About PM Accelerator
-
-The **Product Manager Accelerator Program** supports professionals across every stage of their PM careers — from students and entry-level talent to directors and VPs. Through real-world product building, mentorship, and mock interviews, the program equips candidates with modern PM and leadership skills.
-
-🔗 Learn more on [LinkedIn → PM Accelerator](https://www.linkedin.com/school/pmaccelerator/about/)
-
----
-
-## 🙋 Author & Credits
-
-**Lalith Aditya Chunduri**
-🖥️ [GitHub Profile](https://github.com/Nightyelf2403)
-💡 Built as a full-stack project for PM Accelerator Tech Assessment (2025)
-
-> This is a student-driven personal project. No license is applied — not for production use.
